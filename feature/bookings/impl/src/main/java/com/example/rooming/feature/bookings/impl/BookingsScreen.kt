@@ -16,12 +16,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.rooming.core.common.asDisplayLabel
 import com.example.rooming.core.ui.EmptyState
+import com.example.rooming.core.ui.InfoChipRow
 import com.example.rooming.core.ui.SectionCard
+import com.example.rooming.core.ui.R as UiR
 import com.example.rooming.domain.model.Booking
 import com.example.rooming.domain.model.BookingStatus
 
@@ -46,14 +49,15 @@ fun BookingsScreen(
     onCancelBooking: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val activeCount = uiState.bookings.count { booking -> booking.status == BookingStatus.ACTIVE }
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = { TopAppBar(title = { Text("My bookings") }) },
+        topBar = { TopAppBar(title = { Text(stringResource(UiR.string.bookings_title)) }) },
     ) { innerPadding ->
         if (uiState.bookings.isEmpty() && !uiState.isLoading) {
             EmptyState(
-                title = "No bookings yet",
-                description = "Create a booking from the room details screen.",
+                title = stringResource(UiR.string.bookings_empty_title),
+                description = stringResource(UiR.string.bookings_empty_description),
                 modifier = Modifier.padding(innerPadding),
             )
         } else {
@@ -64,17 +68,36 @@ fun BookingsScreen(
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
+                item {
+                    SectionCard(
+                        title = stringResource(UiR.string.bookings_summary_title),
+                        subtitle = stringResource(UiR.string.bookings_summary_subtitle),
+                    ) {
+                        InfoChipRow(
+                            labels = listOf(
+                                stringResource(UiR.string.bookings_total_label, uiState.bookings.size),
+                                stringResource(UiR.string.bookings_active_label, activeCount),
+                            ),
+                        )
+                    }
+                }
                 items(uiState.bookings, key = Booking::id) { booking ->
                     SectionCard(
                         title = booking.roomName,
                         subtitle = booking.timeSlot.asDisplayLabel(),
                     ) {
+                        InfoChipRow(
+                            labels = listOf(booking.status.asDisplayLabel()),
+                        )
                         Text(
-                            text = "Status: ${booking.status.asDisplayLabel()}",
+                            text = stringResource(
+                                UiR.string.booking_status_label,
+                                booking.status.asDisplayLabel(),
+                            ),
                             style = MaterialTheme.typography.bodyMedium,
                         )
                         Text(
-                            text = "Created at: ${booking.bookedAt}",
+                            text = stringResource(UiR.string.booking_created_at_label, booking.bookedAt),
                             style = MaterialTheme.typography.bodyMedium,
                         )
                         if (booking.status == BookingStatus.ACTIVE) {
@@ -83,7 +106,7 @@ fun BookingsScreen(
                                 horizontalArrangement = Arrangement.End,
                             ) {
                                 OutlinedButton(onClick = { onCancelBooking(booking.id) }) {
-                                    Text("Cancel")
+                                    Text(stringResource(UiR.string.cancel_action))
                                 }
                             }
                         }

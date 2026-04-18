@@ -1,0 +1,53 @@
+<resources>
+    <string name="nav_rooms">Аудитории</string>
+    <string name="nav_favorites">Избранное</string>
+    <string name="nav_bookings">Брони</string>
+
+    <string name="rooms_title">Аудитории</string>
+    <string name="rooms_overview_title">Сводка на сегодня</string>
+    <string name="rooms_overview_subtitle">Выберите аудиторию, добавьте её в избранное или сразу забронируйте слот.</string>
+    <string name="rooms_count_label">Аудиторий: %1$d</string>
+    <string name="favorites_count_label">В избранном: %1$d</string>
+    <string name="free_slots_count_label">Свободных слотов: %1$d</string>
+    <string name="rooms_empty_title">Нет доступных аудиторий</string>
+    <string name="rooms_empty_description">Фейковый источник вернул пустое расписание.</string>
+    <string name="room_details_title">Детали аудитории</string>
+    <string name="room_not_found_title">Аудитория не найдена</string>
+    <string name="room_not_found_description">Запрошенная аудитория отсутствует в демоданных.</string>
+    <string name="room_meta">%1$s • Вместимость %2$d</string>
+    <string name="room_building_chip">%1$s</string>
+    <string name="room_capacity_chip">%1$d мест</string>
+    <string name="room_free_slots_chip">Свободно: %1$d</string>
+    <string name="equipment_label">Оснащение: %1$s</string>
+    <string name="available_slots_title">Доступные слоты</string>
+    <string name="available_slots_subtitle">Бронирование выполняется прямо с экрана деталей.</string>
+    <string name="no_slots_left">На сегодня свободных слотов больше нет.</string>
+    <string name="book_action">Забронировать</string>
+    <string name="free_today_label">Свободно сегодня: %1$d</string>
+    <string name="details_action">Подробнее</string>
+    <string name="booking_success_message">Бронирование оформлено на %1$s</string>
+    <string name="booking_failure_message">Не удалось забронировать аудиторию</string>
+
+    <string name="favorites_title">Избранное</string>
+    <string name="favorites_summary_title">Под рукой</string>
+    <string name="favorites_summary_subtitle">Список аудиторий, к которым вы хотите быстро вернуться.</string>
+    <string name="favorites_total_label">Сохранено: %1$d</string>
+    <string name="favorites_empty_title">Пока нет избранных аудиторий</string>
+    <string name="favorites_empty_description">Добавляйте аудитории в избранное из списка или с экрана деталей.</string>
+    <string name="remove_action">Убрать</string>
+    <string name="open_action">Открыть</string>
+
+    <string name="bookings_title">Мои бронирования</string>
+    <string name="bookings_summary_title">Моё расписание</string>
+    <string name="bookings_summary_subtitle">Отслеживайте активные брони и освобождайте аудитории при необходимости.</string>
+    <string name="bookings_total_label">Всего броней: %1$d</string>
+    <string name="bookings_active_label">Активных: %1$d</string>
+    <string name="bookings_empty_title">Пока нет бронирований</string>
+    <string name="bookings_empty_description">Создайте бронь со страницы выбранной аудитории.</string>
+    <string name="booking_status_label">Статус: %1$s</string>
+    <string name="booking_created_at_label">Создано: %1$s</string>
+    <string name="cancel_action">Отменить</string>
+
+    <string name="back_content_description">Назад</string>
+    <string name="toggle_favorite_content_description">Переключить избранное</string>
+</resources>

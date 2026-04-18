@@ -1,5 +1,6 @@
 package com.example.rooming.core.navigation
 
+import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -8,7 +9,7 @@ import androidx.navigation.NavHostController
 
 data class TopLevelDestination(
     val route: String,
-    val label: String,
+    @param:StringRes val labelRes: Int,
     val icon: ImageVector,
     val order: Int,
 )
