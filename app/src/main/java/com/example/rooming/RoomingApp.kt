@@ -9,11 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.rooming.core.navigation.FeatureEntry
 import com.example.rooming.core.navigation.isTopLevelRoute
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun RoomingApp(featureEntries: List<FeatureEntry>) {
@@ -27,8 +29,11 @@ fun RoomingApp(featureEntries: List<FeatureEntry>) {
     Scaffold(
         bottomBar = {
             if (topLevelDestinations.isNotEmpty()) {
-                NavigationBar {
+                NavigationBar(
+                    containerColor = Color.Transparent,
+                ) {
                     topLevelDestinations.forEach { destination ->
+                        val label = stringResource(destination.labelRes)
                         NavigationBarItem(
                             selected = navBackStackEntry?.destination.isTopLevelRoute(destination.route),
                             onClick = {
@@ -43,10 +48,10 @@ fun RoomingApp(featureEntries: List<FeatureEntry>) {
                             icon = {
                                 Icon(
                                     imageVector = destination.icon,
-                                    contentDescription = destination.label,
+                                    contentDescription = label,
                                 )
                             },
-                            label = { Text(destination.label) },
+                            label = { Text(label) },
                         )
                     }
                 }

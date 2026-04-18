@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.rooming.core.navigation.FeatureEntry
 import com.example.rooming.core.navigation.TopLevelDestination
+import com.example.rooming.core.ui.R
 import com.example.rooming.feature.favorites.api.FavoritesFeatureApi
 import com.example.rooming.feature.rooms.api.RoomsFeatureApi
 import javax.inject.Inject
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class FavoritesFeatureEntry @Inject constructor() : FeatureEntry {
     override val topLevelDestination = TopLevelDestination(
         route = FavoritesFeatureApi.route,
-        label = "Favorites",
+        labelRes = R.string.nav_favorites,
         icon = Icons.Outlined.FavoriteBorder,
         order = 1,
     )

@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -20,7 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
@@ -28,12 +29,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.rooming.core.common.asDisplayLabel
 import com.example.rooming.core.ui.EmptyState
+import com.example.rooming.core.ui.InfoChipRow
 import com.example.rooming.core.ui.SectionCard
+import com.example.rooming.core.ui.R as UiR
 import com.example.rooming.domain.model.Room
 import com.example.rooming.domain.model.TimeSlot
 
@@ -88,16 +92,26 @@ fun RoomsScreen(
     onFavoriteClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val roomsTitle = stringResource(UiR.string.rooms_title)
+    val summaryTitle = stringResource(UiR.string.rooms_overview_title)
+    val summarySubtitle = stringResource(UiR.string.rooms_overview_subtitle)
+    val favoriteCountLabel = stringResource(UiR.string.favorites_count_label, uiState.favoriteIds.size)
+    val roomCountLabel = stringResource(UiR.string.rooms_count_label, uiState.rooms.size)
+    val freeSlotsLabel = stringResource(
+        UiR.string.free_slots_count_label,
+        uiState.rooms.sumOf { room -> room.availableTimeSlots.size },
+    )
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(title = { Text("Rooms") })
+            TopAppBar(title = { Text(roomsTitle) })
         },
     ) { innerPadding ->
         if (uiState.rooms.isEmpty() && !uiState.isLoading) {
             EmptyState(
-                title = "No rooms available",
-                description = "Fake repository returned an empty schedule.",
+                title = stringResource(UiR.string.rooms_empty_title),
+                description = stringResource(UiR.string.rooms_empty_description),
                 modifier = Modifier.padding(innerPadding),
             )
         } else {
@@ -108,6 +122,16 @@ fun RoomsScreen(
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
+                item {
+                    SectionCard(
+                        title = summaryTitle,
+                        subtitle = summarySubtitle,
+                    ) {
+                        InfoChipRow(
+                            labels = listOf(roomCountLabel, favoriteCountLabel, freeSlotsLabel),
+                        )
+                    }
+                }
                 items(uiState.rooms, key = Room::id) { room ->
                     RoomCard(
                         room = room,
@@ -132,17 +156,19 @@ fun RoomDetailsScreen(
     modifier: Modifier = Modifier,
 ) {
     val room = uiState.room
+    val backContentDescription = stringResource(UiR.string.back_content_description)
+    val toggleFavoriteDescription = stringResource(UiR.string.toggle_favorite_content_description)
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(room?.name ?: "Room details") },
+                title = { Text(room?.name ?: stringResource(UiR.string.room_details_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
-                            contentDescription = "Back",
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = backContentDescription,
                         )
                     }
                 },
@@ -154,7 +180,7 @@ fun RoomDetailsScreen(
                             } else {
                                 Icons.Outlined.FavoriteBorder
                             },
-                            contentDescription = "Toggle favorite",
+                            contentDescription = toggleFavoriteDescription,
                         )
                     }
                 },
@@ -164,8 +190,8 @@ fun RoomDetailsScreen(
     ) { innerPadding ->
         if (room == null && !uiState.isLoading) {
             EmptyState(
-                title = "Room not found",
-                description = "The requested room is missing in fake data.",
+                title = stringResource(UiR.string.room_not_found_title),
+                description = stringResource(UiR.string.room_not_found_description),
                 modifier = Modifier.padding(innerPadding),
             )
         } else {
@@ -179,21 +205,27 @@ fun RoomDetailsScreen(
                 room?.let {
                     SectionCard(
                         title = it.name,
-                        subtitle = "${it.building} • Capacity ${it.capacity}",
+                        subtitle = stringResource(UiR.string.room_meta, it.building, it.capacity),
                     ) {
+                        InfoChipRow(
+                            labels = listOf(
+                                stringResource(UiR.string.room_building_chip, it.building),
+                                stringResource(UiR.string.room_capacity_chip, it.capacity),
+                                stringResource(UiR.string.room_free_slots_chip, it.availableTimeSlots.size),
+                            ),
+                        )
                         Text(text = it.description, style = MaterialTheme.typography.bodyMedium)
-                        Text(
-                            text = "Equipment: ${it.equipment.joinToString()}",
-                            style = MaterialTheme.typography.bodyMedium,
+                        InfoChipRow(
+                            labels = it.equipment,
                         )
                     }
                     SectionCard(
-                        title = "Available time slots",
-                        subtitle = "Book a free slot directly from details",
+                        title = stringResource(UiR.string.available_slots_title),
+                        subtitle = stringResource(UiR.string.available_slots_subtitle),
                     ) {
                         if (it.availableTimeSlots.isEmpty()) {
                             Text(
-                                text = "There are no free slots left for today.",
+                                text = stringResource(UiR.string.no_slots_left),
                                 style = MaterialTheme.typography.bodyMedium,
                             )
                         } else {
@@ -208,7 +240,7 @@ fun RoomDetailsScreen(
                                             style = MaterialTheme.typography.bodyMedium,
                                         )
                                         TextButton(onClick = { onBookClick(timeSlot) }) {
-                                            Text("Book")
+                                            Text(stringResource(UiR.string.book_action))
                                         }
                                     }
                                 }
@@ -228,14 +260,23 @@ private fun RoomCard(
     onFavoriteClick: () -> Unit,
     onOpenDetails: () -> Unit,
 ) {
+    val toggleFavoriteDescription = stringResource(UiR.string.toggle_favorite_content_description)
     SectionCard(
         title = room.name,
-        subtitle = "${room.building} • Capacity ${room.capacity}",
+        subtitle = stringResource(UiR.string.room_meta, room.building, room.capacity),
     ) {
+        InfoChipRow(
+            labels = listOf(
+                stringResource(UiR.string.room_building_chip, room.building),
+                stringResource(UiR.string.room_capacity_chip, room.capacity),
+                stringResource(UiR.string.room_free_slots_chip, room.availableTimeSlots.size),
+            ) + room.equipment.take(2),
+        )
         Text(text = room.description, style = MaterialTheme.typography.bodyMedium)
         Text(
-            text = "Free today: ${room.availableTimeSlots.size} slot(s)",
+            text = stringResource(UiR.string.free_today_label, room.availableTimeSlots.size),
             style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.secondary,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -248,11 +289,11 @@ private fun RoomCard(
                     } else {
                         Icons.Outlined.FavoriteBorder
                     },
-                    contentDescription = "Toggle favorite",
+                    contentDescription = toggleFavoriteDescription,
                 )
             }
-            Button(onClick = onOpenDetails) {
-                Text("Details")
+            OutlinedButton(onClick = onOpenDetails) {
+                Text(stringResource(UiR.string.details_action))
             }
         }
     }

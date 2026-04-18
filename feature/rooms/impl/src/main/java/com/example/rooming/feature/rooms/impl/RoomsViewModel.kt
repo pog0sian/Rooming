@@ -88,8 +88,8 @@ class RoomDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val result = bookRoomUseCase(roomId, timeSlot)
             messageState.value = result.fold(
-                onSuccess = { "Booking created for ${timeSlot.startTime}" },
-                onFailure = { error -> error.message ?: "Unable to book the room" },
+                onSuccess = { "Бронирование оформлено на ${timeSlot.startTime}" },
+                onFailure = { error -> error.message ?: "Не удалось забронировать аудиторию" },
             )
             refreshSignal.update { current -> current + 1 }
         }

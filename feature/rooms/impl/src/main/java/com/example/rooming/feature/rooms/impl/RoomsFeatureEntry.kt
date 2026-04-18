@@ -9,13 +9,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.rooming.core.navigation.FeatureEntry
 import com.example.rooming.core.navigation.TopLevelDestination
+import com.example.rooming.core.ui.R
 import com.example.rooming.feature.rooms.api.RoomsFeatureApi
 import javax.inject.Inject
 
 class RoomsFeatureEntry @Inject constructor() : FeatureEntry {
     override val topLevelDestination = TopLevelDestination(
         route = RoomsFeatureApi.route,
-        label = "Rooms",
+        labelRes = R.string.nav_rooms,
         icon = Icons.Outlined.Home,
         order = 0,
     )

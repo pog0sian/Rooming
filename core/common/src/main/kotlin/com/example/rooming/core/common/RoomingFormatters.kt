@@ -6,6 +6,6 @@ import com.example.rooming.domain.model.TimeSlot
 fun TimeSlot.asDisplayLabel(): String = "$date • $startTime-$endTime"
 
 fun BookingStatus.asDisplayLabel(): String = when (this) {
-    BookingStatus.ACTIVE -> "Active"
-    BookingStatus.CANCELLED -> "Cancelled"
+    BookingStatus.ACTIVE -> "Активно"
+    BookingStatus.CANCELLED -> "Отменено"
 }
