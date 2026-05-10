@@ -20,6 +20,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Favorite
@@ -49,6 +50,10 @@ fun RoomsRoute(
     viewModel: RoomsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        viewModel.onScreenViewed()
+    }
+
     RoomsScreen(
         uiState = uiState,
         onRoomClick = onRoomClick,
@@ -104,8 +109,14 @@ fun RoomsScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(title = { Text(roomsTitle) })
+            TopAppBar(
+                title = { Text(roomsTitle) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                ),
+            )
         },
     ) { innerPadding ->
         if (uiState.rooms.isEmpty() && !uiState.isLoading) {
@@ -161,9 +172,13 @@ fun RoomDetailsScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(room?.name ?: stringResource(UiR.string.room_details_title)) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                ),
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(

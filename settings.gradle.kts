@@ -15,6 +15,15 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = uri("https://artifactory-external.vkpartner.ru/artifactory/vkid-sdk-android/")
+        }
+        maven {
+            url = uri("https://artifactory-external.vkpartner.ru/artifactory/maven/")
+        }
+        maven {
+            url = uri("https://artifactory-external.vkpartner.ru/artifactory/vk-id-captcha/android/")
+        }
     }
 }
 
@@ -23,6 +32,7 @@ rootProject.name = "Rooming"
 include(
     ":app",
     ":core:common",
+    ":core:analytics",
     ":core:navigation",
     ":core:ui",
     ":domain:model",
@@ -37,5 +47,9 @@ include(
     ":feature:favorites:impl",
     ":feature:bookings:api",
     ":feature:bookings:impl",
+    ":feature:auth:api",
+    ":feature:auth:impl",
+    ":feature:about:api",
+    ":feature:about:impl",
     ":quality:architecture-test",
 )

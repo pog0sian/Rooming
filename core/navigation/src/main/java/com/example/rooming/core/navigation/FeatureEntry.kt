@@ -18,6 +18,13 @@ interface FeatureEntry {
     val topLevelDestination: TopLevelDestination?
 
     fun NavGraphBuilder.register(navController: NavHostController)
+
+    fun NavGraphBuilder.register(
+        navController: NavHostController,
+        topLevelDestinations: List<TopLevelDestination>,
+    ) {
+        register(navController)
+    }
 }
 
 fun NavDestination?.isTopLevelRoute(route: String): Boolean =

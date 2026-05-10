@@ -24,18 +24,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
 private val RoomingColorScheme = lightColorScheme(
-    primary = Color(0xFF2457C5),
-    onPrimary = Color(0xFFF8FBFF),
-    secondary = Color(0xFF0E7C86),
-    onSecondary = Color(0xFFF3FFFF),
-    tertiary = Color(0xFFD67E2C),
-    background = Color(0xFFF5F7FB),
-    onBackground = Color(0xFF122033),
-    surface = Color(0xFFFFFBFF),
-    onSurface = Color(0xFF172538),
-    surfaceVariant = Color(0xFFE8EEF8),
-    onSurfaceVariant = Color(0xFF425366),
-    outline = Color(0xFFD1D9E6),
+    primary = Color(0xFF0B5FFF),
+    onPrimary = Color.White,
+    secondary = Color(0xFF2E74D7),
+    onSecondary = Color.White,
+    tertiary = Color(0xFF6EA8FF),
+    background = Color(0xFFF4F8FF),
+    onBackground = Color(0xFF10213A),
+    surface = Color.White,
+    onSurface = Color(0xFF10213A),
+    surfaceVariant = Color(0xFFE7F0FF),
+    onSurfaceVariant = Color(0xFF49617F),
+    outline = Color(0xFFD4E2F7),
 )
 
 @Composable

@@ -2,6 +2,7 @@
     <string name="nav_rooms">Аудитории</string>
     <string name="nav_favorites">Избранное</string>
     <string name="nav_bookings">Брони</string>
+    <string name="nav_about">О нас</string>
 
     <string name="rooms_title">Аудитории</string>
     <string name="rooms_overview_title">Сводка на сегодня</string>

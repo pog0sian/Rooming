@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "653142805615",
+    "project_id": "rooming-ee196",
+    "storage_bucket": "rooming-ee196.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653142805615:android:0ca456c06625630fb3d19a",
+        "android_client_info": {
+          "package_name": "com.example.rooming"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVpn_BaLSzN4hLbyXalx4xsj-83_wlgwg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

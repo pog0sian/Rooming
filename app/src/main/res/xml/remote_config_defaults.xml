@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>welcome_message</key>
+        <value>Добро пожаловать в Rooming!</value>
+    </entry>
+    <entry>
+        <key>is_experimental_enabled</key>
+        <value>false</value>
+    </entry>
+</defaultsMap>

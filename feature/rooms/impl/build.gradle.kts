@@ -34,6 +34,7 @@ kapt {
 
 dependencies {
     implementation(project(":core:common"))
+    implementation(project(":core:analytics"))
     implementation(project(":core:navigation"))
     implementation(project(":core:ui"))
     implementation(project(":domain:model"))
@@ -55,6 +56,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     kapt(libs.google.hilt.compiler)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 }

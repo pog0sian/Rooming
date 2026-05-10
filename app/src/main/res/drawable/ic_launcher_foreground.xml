@@ -1,24 +1,17 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <path
-        android:fillColor="#F7FBFF"
-        android:pathData="M28,24h52c6.6,0 12,5.4 12,12v36c0,6.6 -5.4,12 -12,12H28c-6.6,0 -12,-5.4 -12,-12V36c0,-6.6 5.4,-12 12,-12z" />
-    <path
-        android:fillColor="#2555C1"
-        android:pathData="M34,36h40c3.3,0 6,2.7 6,6v12c0,3.3 -2.7,6 -6,6H34c-3.3,0 -6,-2.7 -6,-6V42c0,-3.3 2.7,-6 6,-6z" />
-    <path
-        android:fillColor="#0E7C86"
-        android:pathData="M34,66h16c2.2,0 4,1.8 4,4s-1.8,4 -4,4H34c-2.2,0 -4,-1.8 -4,-4s1.8,-4 4,-4z" />
-    <path
-        android:fillColor="#0E7C86"
-        android:pathData="M58,66h16c2.2,0 4,1.8 4,4s-1.8,4 -4,4H58c-2.2,0 -4,-1.8 -4,-4s1.8,-4 4,-4z" />
-    <path
-        android:fillColor="#E68F37"
-        android:pathData="M68.8,15.7l4.1,4.1l-19.3,19.3l-7.2,0l0,-7.2z" />
-    <path
-        android:fillColor="#F7FBFF"
-        android:pathData="M50.4,33.7l3.3,3.3l-2.4,2.4l-3.3,-3.3z" />
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group
+        android:pivotX="480"
+        android:pivotY="480"
+        android:scaleX="0.72"
+        android:scaleY="0.72">
+        <group android:translateY="960">
+            <path
+                android:fillColor="#0B5FFF"
+                android:pathData="M440,-440q17,0 28.5,-11.5T480,-480q0,-17 -11.5,-28.5T440,-520q-17,0 -28.5,11.5T400,-480q0,17 11.5,28.5T440,-440ZM280,-120v-80l240,-40v-445q0,-15 -9,-27t-23,-14l-208,-34v-80l220,36q44,8 72,41t28,77v512l-320,54ZM120,-120v-80h80v-560q0,-34 23.5,-57t56.5,-23h400q34,0 57,23t23,57v560h80v80H120ZM280,-200h400v-560H280v560Z" />
+        </group>
+    </group>
 </vector>

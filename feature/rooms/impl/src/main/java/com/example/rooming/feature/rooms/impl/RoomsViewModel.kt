@@ -3,6 +3,7 @@ package com.example.rooming.feature.rooms.impl
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rooming.core.analytics.AnalyticsService
 import com.example.rooming.domain.model.Room
 import com.example.rooming.domain.model.TimeSlot
 import com.example.rooming.domain.usecase.BookRoomUseCase
@@ -25,6 +26,7 @@ class RoomsViewModel @Inject constructor(
     getRoomsUseCase: GetRoomsUseCase,
     getFavoriteRoomsUseCase: GetFavoriteRoomsUseCase,
     private val toggleFavoriteRoomUseCase: ToggleFavoriteRoomUseCase,
+    private val analytics: AnalyticsService,
 ) : ViewModel() {
     val uiState = combine(
         getRoomsUseCase(),
@@ -46,6 +48,13 @@ class RoomsViewModel @Inject constructor(
             toggleFavoriteRoomUseCase(roomId)
         }
     }
+
+    fun onScreenViewed() {
+        analytics.trackEvent(
+            name = "screen_viewed",
+            params = mapOf("screen_name" to "rooms"),
+        )
+    }
 }
 
 @HiltViewModel
@@ -55,6 +64,7 @@ class RoomDetailsViewModel @Inject constructor(
     private val getRoomByIdUseCase: GetRoomByIdUseCase,
     private val toggleFavoriteRoomUseCase: ToggleFavoriteRoomUseCase,
     private val bookRoomUseCase: BookRoomUseCase,
+    private val analytics: AnalyticsService,
 ) : ViewModel() {
     private val roomId = checkNotNull(savedStateHandle.get<String>(RoomsFeatureApi.roomIdArg))
     private val refreshSignal = MutableStateFlow(0)
@@ -87,6 +97,14 @@ class RoomDetailsViewModel @Inject constructor(
     fun onBookClick(timeSlot: TimeSlot) {
         viewModelScope.launch {
             val result = bookRoomUseCase(roomId, timeSlot)
+            result.onSuccess {
+                analytics.trackEvent(
+                    name = "room_booked",
+                    params = mapOf("room_id" to roomId, "slot" to timeSlot.startTime),
+                )
+            }.onFailure { error ->
+                analytics.trackError("Не удалось забронировать аудиторию", error)
+            }
             messageState.value = result.fold(
                 onSuccess = { "Бронирование оформлено на ${timeSlot.startTime}" },
                 onFailure = { error -> error.message ?: "Не удалось забронировать аудиторию" },

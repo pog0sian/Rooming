@@ -99,6 +99,28 @@ class ArchitectureKonsistTest {
         }
     }
 
+    @Test
+    fun `feature impl gradle modules should depend on another feature only through api modules`() {
+        val buildFiles = Files.walk(rootDir.resolve("feature"))
+            .filter { path -> path.toString().endsWith("impl/build.gradle.kts") }
+            .toList()
+
+        buildFiles.forEach { file ->
+            val currentFeature = file.toString().substringAfter("/feature/").substringBefore('/')
+            val forbiddenDependency = Files.readAllLines(file)
+                .firstOrNull { line ->
+                    line.contains("project(\":feature:") &&
+                        !line.contains(":feature:$currentFeature:") &&
+                        !line.contains(":api")
+                }
+
+            assertTrue(
+                "Feature impl module should depend on other features only through api: ${file.name} -> $forbiddenDependency",
+                forbiddenDependency == null,
+            )
+        }
+    }
+
     private fun assertNoForbiddenImports(
         sourceRoot: Path,
         forbiddenPrefixes: List<String>,
