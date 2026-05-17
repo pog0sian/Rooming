@@ -22,6 +22,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:common"))
     implementation(libs.appmetrica.analytics)
     implementation(libs.javax.inject)
 }

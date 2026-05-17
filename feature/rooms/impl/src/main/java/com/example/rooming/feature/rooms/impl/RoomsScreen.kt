@@ -1,5 +1,8 @@
 package com.example.rooming.feature.rooms.impl
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -137,6 +139,7 @@ fun RoomsScreen(
                     SectionCard(
                         title = summaryTitle,
                         subtitle = summarySubtitle,
+                        modifier = Modifier.animateContentSize(),
                     ) {
                         InfoChipRow(
                             labels = listOf(roomCountLabel, favoriteCountLabel, freeSlotsLabel),
@@ -237,25 +240,53 @@ fun RoomDetailsScreen(
                     SectionCard(
                         title = stringResource(UiR.string.available_slots_title),
                         subtitle = stringResource(UiR.string.available_slots_subtitle),
+                        modifier = Modifier.animateContentSize(),
                     ) {
-                        if (it.availableTimeSlots.isEmpty()) {
+                        val visibleTimeSlots = (it.availableTimeSlots + it.bookedTimeSlots)
+                            .distinct()
+                            .sortedWith(compareBy<TimeSlot> { timeSlot -> timeSlot.date }
+                                .thenBy { timeSlot -> timeSlot.startTime })
+
+                        if (visibleTimeSlots.isEmpty()) {
                             Text(
                                 text = stringResource(UiR.string.no_slots_left),
                                 style = MaterialTheme.typography.bodyMedium,
                             )
                         } else {
-                            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                                it.availableTimeSlots.forEach { timeSlot ->
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                    ) {
-                                        Text(
-                                            text = timeSlot.asDisplayLabel(),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                        )
-                                        TextButton(onClick = { onBookClick(timeSlot) }) {
-                                            Text(stringResource(UiR.string.book_action))
+                            AnimatedVisibility(
+                                visible = visibleTimeSlots.isNotEmpty(),
+                                label = "available_slots_visibility",
+                            ) {
+                                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                                    visibleTimeSlots.forEach { timeSlot ->
+                                        val isBooked = timeSlot in it.bookedTimeSlots
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                        ) {
+                                            Text(
+                                                text = timeSlot.asDisplayLabel(),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                            )
+                                            TextButton(
+                                                enabled = !isBooked,
+                                                onClick = { onBookClick(timeSlot) },
+                                            ) {
+                                                Crossfade(
+                                                    targetState = isBooked,
+                                                    label = "booking_button_text",
+                                                ) { booked ->
+                                                    Text(
+                                                        stringResource(
+                                                            if (booked) {
+                                                                UiR.string.booked_action
+                                                            } else {
+                                                                UiR.string.book_action
+                                                            },
+                                                        ),
+                                                    )
+                                                }
+                                            }
                                         }
                                     }
                                 }

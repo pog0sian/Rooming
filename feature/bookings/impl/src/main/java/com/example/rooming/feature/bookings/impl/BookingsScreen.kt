@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.rooming.core.common.asBookingCreatedAtLabel
 import com.example.rooming.core.common.asDisplayLabel
 import com.example.rooming.core.ui.EmptyState
 import com.example.rooming.core.ui.InfoChipRow
@@ -106,7 +107,10 @@ fun BookingsScreen(
                             style = MaterialTheme.typography.bodyMedium,
                         )
                         Text(
-                            text = stringResource(UiR.string.booking_created_at_label, booking.bookedAt),
+                            text = stringResource(
+                                UiR.string.booking_created_at_label,
+                                booking.bookedAt.asBookingCreatedAtLabel(),
+                            ),
                             style = MaterialTheme.typography.bodyMedium,
                         )
                         if (booking.status == BookingStatus.ACTIVE) {

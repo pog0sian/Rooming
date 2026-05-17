@@ -85,7 +85,7 @@ fun LoginRoute(
             is YandexAuthResult.Success -> viewModel.onExternalLoginSuccess(
                 provider = AuthProvider.YANDEX,
                 token = result.token.value,
-                userName = "Пользователь Яндекс",
+                userName = AuthProvider.YANDEX.displayName,
                 onLoggedIn = onLoggedIn,
             )
             is YandexAuthResult.Failure -> viewModel.onExternalLoginError(

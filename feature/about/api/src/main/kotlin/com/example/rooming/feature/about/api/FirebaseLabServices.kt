@@ -15,6 +15,11 @@ data class UserProfile(
     val updatedAt: String = "",
 )
 
+data class BuildVariantConfig(
+    val environmentName: String = "demo",
+    val labToolsEnabled: Boolean = true,
+)
+
 interface RemoteConfigService {
     val config: StateFlow<RemoteAppConfig>
 
@@ -26,4 +31,8 @@ interface UserProfileService {
     val errorMessage: StateFlow<String?>
 
     fun start()
+
+    fun refresh()
+
+    fun clear()
 }

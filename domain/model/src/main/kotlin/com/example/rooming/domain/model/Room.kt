@@ -8,4 +8,5 @@ data class Room(
     val equipment: List<String>,
     val description: String,
     val availableTimeSlots: List<TimeSlot>,
+    val bookedTimeSlots: List<TimeSlot> = emptyList(),
 )

@@ -35,8 +35,10 @@ kapt {
 
 dependencies {
     implementation(project(":core:analytics"))
+    implementation(project(":core:common"))
     implementation(project(":core:navigation"))
     implementation(project(":core:ui"))
+    implementation(project(":feature:about:api"))
     implementation(project(":feature:auth:api"))
 
     implementation(platform(libs.androidx.compose.bom))

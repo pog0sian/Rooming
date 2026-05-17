@@ -3,6 +3,9 @@ package com.example.rooming.di
 import com.example.rooming.BuildConfig
 import com.example.rooming.core.analytics.AnalyticsService
 import com.example.rooming.core.analytics.AppMetricaAnalyticsService
+import com.example.rooming.core.common.CrashReporter
+import com.example.rooming.crash.CompositeCrashReporter
+import com.example.rooming.feature.about.api.BuildVariantConfig
 import com.example.rooming.feature.about.api.RemoteConfigService
 import com.example.rooming.feature.about.api.MapConfig
 import com.example.rooming.feature.about.api.UserProfileService
@@ -22,6 +25,10 @@ abstract class AnalyticsModule {
     @Binds
     @Singleton
     abstract fun bindAnalyticsService(service: AppMetricaAnalyticsService): AnalyticsService
+
+    @Binds
+    @Singleton
+    abstract fun bindCrashReporter(reporter: CompositeCrashReporter): CrashReporter
 
     @Binds
     @Singleton
@@ -45,5 +52,11 @@ object ExternalConfigModule {
     @Provides
     fun provideMapConfig(): MapConfig = MapConfig(
         yandexMapKitApiKey = BuildConfig.YANDEX_MAPKIT_API_KEY,
+    )
+
+    @Provides
+    fun provideBuildVariantConfig(): BuildVariantConfig = BuildVariantConfig(
+        environmentName = BuildConfig.ROOMING_ENV,
+        labToolsEnabled = BuildConfig.LAB_TOOLS_ENABLED,
     )
 }

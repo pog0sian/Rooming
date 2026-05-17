@@ -29,6 +29,7 @@ class SecureAuthStorage @Inject constructor(
         preferences.edit()
             .putString(KEY_TOKEN, session.token)
             .putString(KEY_USER_NAME, session.userName)
+            .putString(KEY_EMAIL, session.email)
             .putString(KEY_PROVIDER, session.provider.name)
             .apply()
     }
@@ -36,12 +37,14 @@ class SecureAuthStorage @Inject constructor(
     fun read(): AuthSession? {
         val token = preferences.getString(KEY_TOKEN, null)?.takeIf(String::isNotBlank) ?: return null
         val userName = preferences.getString(KEY_USER_NAME, null)?.takeIf(String::isNotBlank) ?: return null
+        val email = preferences.getString(KEY_EMAIL, null).orEmpty()
         val providerName = preferences.getString(KEY_PROVIDER, null) ?: return null
         val provider = runCatching { AuthProvider.valueOf(providerName) }.getOrNull() ?: return null
 
         return AuthSession(
             token = token,
             userName = userName,
+            email = email,
             provider = provider,
         )
     }
@@ -53,6 +56,7 @@ class SecureAuthStorage @Inject constructor(
     private companion object {
         const val KEY_TOKEN = "token"
         const val KEY_USER_NAME = "user_name"
+        const val KEY_EMAIL = "email"
         const val KEY_PROVIDER = "provider"
     }
 }

@@ -25,7 +25,7 @@ class FakeRoomingStore @Inject constructor() {
             Booking(
                 id = "booking-1",
                 roomId = "room-202",
-                roomName = "Room 202",
+                roomName = "Аудитория 202",
                 timeSlot = TimeSlot("2026-04-18", "10:00", "11:30"),
                 status = BookingStatus.ACTIVE,
                 bookedAt = "2026-04-17T18:20:00",
@@ -33,7 +33,7 @@ class FakeRoomingStore @Inject constructor() {
             Booking(
                 id = "booking-2",
                 roomId = "room-404",
-                roomName = "Room 404",
+                roomName = "Аудитория 404",
                 timeSlot = TimeSlot("2026-04-18", "17:00", "18:30"),
                 status = BookingStatus.ACTIVE,
                 bookedAt = "2026-04-17T19:10:00",
@@ -101,10 +101,12 @@ class FakeRoomingStore @Inject constructor() {
             .groupBy(keySelector = Booking::roomId, valueTransform = Booking::timeSlot)
 
         return baseRooms.map { room ->
+            val bookedTimeSlots = activeSlotsByRoomId[room.id].orEmpty()
             room.copy(
                 availableTimeSlots = room.availableTimeSlots.filterNot { timeSlot ->
-                    timeSlot in activeSlotsByRoomId[room.id].orEmpty()
+                    timeSlot in bookedTimeSlots
                 },
+                bookedTimeSlots = bookedTimeSlots,
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.example.rooming.feature.about.impl
 
+import android.annotation.SuppressLint
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
+import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.Route
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,8 +50,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.example.rooming.core.common.CrashReporter
 import com.example.rooming.core.ui.InfoChipRow
 import com.example.rooming.core.ui.SectionCard
+import com.example.rooming.feature.about.api.BuildVariantConfig
 import com.example.rooming.feature.about.api.MapConfig
 import com.example.rooming.feature.about.api.RemoteAppConfig
 import com.example.rooming.feature.about.api.RemoteConfigService
@@ -68,8 +72,10 @@ private val DemoStartPoint = Point(53.7574, 87.1364)
 @Composable
 fun AboutRoute(
     mapConfig: MapConfig,
+    buildVariantConfig: BuildVariantConfig,
     remoteConfigService: RemoteConfigService,
     userProfileService: UserProfileService,
+    crashReporter: CrashReporter,
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -84,9 +90,17 @@ fun AboutRoute(
 
     AboutScreen(
         hasMapKey = mapConfig.yandexMapKitApiKey.isNotBlank(),
+        buildVariantConfig = buildVariantConfig,
         remoteConfig = remoteConfig,
         userProfile = userProfile,
         profileError = profileError,
+        onGenerateCrashClick = {
+            crashReporter.log("Generate crash button clicked")
+            crashReporter.setKey("screen", "about")
+            crashReporter.setKey("remote_experiment_enabled", remoteConfig.isExperimentalEnabled.toString())
+            crashReporter.setUserId(userProfile?.userId)
+            throw RuntimeException("Manual crash from laboratory work 8")
+        },
         onLogoutClick = onLogoutClick,
         modifier = modifier,
     )
@@ -96,9 +110,11 @@ fun AboutRoute(
 @Composable
 fun AboutScreen(
     hasMapKey: Boolean,
+    buildVariantConfig: BuildVariantConfig,
     remoteConfig: RemoteAppConfig,
     userProfile: UserProfile?,
     profileError: String?,
+    onGenerateCrashClick: () -> Unit,
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -177,6 +193,7 @@ fun AboutScreen(
                 InfoChipRow(
                     labels = listOf(
                         "Remote Config",
+                        "variant=${buildVariantConfig.environmentName}",
                         if (remoteConfig.isExperimentalEnabled) "flag=true" else "flag=false",
                     ),
                 )
@@ -211,6 +228,31 @@ fun AboutScreen(
                         Text(
                             text = "Обновлено: ${profile.updatedAt}",
                             style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+            }
+
+            if (buildVariantConfig.labToolsEnabled) {
+                SectionCard(
+                    title = "Crash reporting",
+                    subtitle = "Тестовый сценарий для Firebase Crashlytics и AppMetrica.",
+                ) {
+                    InfoChipRow(
+                        labels = listOf(
+                            "Crashlytics",
+                            "AppMetrica",
+                            "non-fatal context",
+                        ),
+                    )
+                    Button(
+                        onClick = onGenerateCrashClick,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Icon(imageVector = Icons.Outlined.BugReport, contentDescription = null)
+                        Text(
+                            text = "Сгенерировать тестовый краш",
+                            modifier = Modifier.padding(start = 8.dp),
                         )
                     }
                 }
@@ -385,6 +427,7 @@ private fun Context.hasLocationPermission(): Boolean =
     checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
         checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
+@SuppressLint("MissingPermission")
 private fun findCurrentPoint(context: Context): Point? {
     if (!context.hasLocationPermission()) return null
 

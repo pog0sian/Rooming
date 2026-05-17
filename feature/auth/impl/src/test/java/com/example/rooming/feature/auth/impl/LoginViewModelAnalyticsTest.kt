@@ -1,6 +1,7 @@
 package com.example.rooming.feature.auth.impl
 
 import com.example.rooming.core.analytics.FakeAnalyticsService
+import com.example.rooming.core.common.CrashReporter
 import com.example.rooming.feature.auth.api.AuthProvider
 import com.example.rooming.feature.auth.api.AuthResult
 import com.example.rooming.feature.auth.api.AuthService
@@ -30,7 +31,9 @@ class LoginViewModelAnalyticsTest {
         val analytics = FakeAnalyticsService()
         val viewModel = LoginViewModel(
             authService = FakeAuthService(),
+            yandexProfileClient = FakeYandexProfileClient(),
             analytics = analytics,
+            crashReporter = FakeCrashReporter(),
         )
 
         viewModel.onScreenViewed()
@@ -44,7 +47,9 @@ class LoginViewModelAnalyticsTest {
         val analytics = FakeAnalyticsService()
         val viewModel = LoginViewModel(
             authService = FakeAuthService(),
+            yandexProfileClient = FakeYandexProfileClient(),
             analytics = analytics,
+            crashReporter = FakeCrashReporter(),
         )
         var loggedIn = false
 
@@ -72,15 +77,32 @@ private class FakeAuthService : AuthService {
         provider: AuthProvider,
         token: String,
         userName: String,
+        email: String,
     ): AuthResult = AuthResult.Success(
         AuthSession(
             token = token,
             userName = userName,
+            email = email,
             provider = provider,
         ),
     )
 
     override fun logout() = Unit
+}
+
+private class FakeCrashReporter : CrashReporter {
+    override fun log(message: String) = Unit
+
+    override fun setKey(key: String, value: String) = Unit
+
+    override fun setUserId(userId: String?) = Unit
+
+    override fun recordNonFatal(throwable: Throwable) = Unit
+}
+
+private class FakeYandexProfileClient : YandexProfileClient() {
+    override suspend fun getProfile(token: String): Result<YandexProfile> =
+        Result.success(YandexProfile(name = "Тестовый пользователь", email = "test@yandex.ru"))
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)

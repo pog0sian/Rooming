@@ -9,6 +9,7 @@ interface AuthService {
         provider: AuthProvider,
         token: String,
         userName: String,
+        email: String = "",
     ): AuthResult
 
     fun logout()

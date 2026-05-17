@@ -19,6 +19,7 @@ class DefaultAuthService @Inject constructor(
         provider: AuthProvider,
         token: String,
         userName: String,
+        email: String,
     ): AuthResult {
         if (token.isBlank()) {
             return AuthResult.Error("SDK авторизации вернул пустой токен")
@@ -27,6 +28,7 @@ class DefaultAuthService @Inject constructor(
         val session = AuthSession(
             token = token,
             userName = userName.ifBlank { provider.displayName },
+            email = email,
             provider = provider,
         )
         storage.save(session)

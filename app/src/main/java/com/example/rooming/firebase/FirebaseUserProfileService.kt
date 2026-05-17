@@ -35,9 +35,24 @@ class FirebaseUserProfileService @Inject constructor(
     override val errorMessage: StateFlow<String?> = mutableErrorMessage.asStateFlow()
 
     override fun start() {
-        if (isStarted) return
-        isStarted = true
+        if (!isStarted) {
+            isStarted = true
+        }
+        syncCurrentSession()
+    }
 
+    override fun refresh() {
+        syncCurrentSession()
+    }
+
+    override fun clear() {
+        listenerRegistration?.remove()
+        listenerRegistration = null
+        mutableProfile.value = null
+        mutableErrorMessage.value = null
+    }
+
+    private fun syncCurrentSession() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             syncProfile(currentUser.uid)
@@ -58,9 +73,11 @@ class FirebaseUserProfileService @Inject constructor(
         val session = authService.getSavedSession()
         val token = FirebaseTokenStore.read(context)
         val name = session?.userName.orEmpty().ifBlank { "Пользователь Rooming" }
-        val email = session?.provider
-            ?.let { provider -> "${provider.analyticsName}@rooming.local" }
-            ?: "user@rooming.local"
+        val email = session?.email.orEmpty().ifBlank {
+            session?.provider
+                ?.let { provider -> "${provider.analyticsName}@rooming.local" }
+                ?: "user@rooming.local"
+        }
 
         firestore.collection(USERS_COLLECTION)
             .document(userId)

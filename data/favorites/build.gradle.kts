@@ -7,6 +7,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":core:common"))
     implementation(project(":domain:model"))
     implementation(project(":domain:repository"))
     implementation(project(":data:rooms"))

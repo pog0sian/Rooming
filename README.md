@@ -62,6 +62,8 @@ Rooming
 - авторизация через Яндекс ID и VK
 - отправка событий в AppMetrica через общий `AnalyticsService`
 - раздел «О нас» с картой офиса и построением маршрута
+- Firebase Remote Config, Cloud Firestore, FCM и Crashlytics
+- фоновые задачи через WorkManager
 
 ## Технологии
 
@@ -80,6 +82,8 @@ Rooming
 - VK Android SDK
 - EncryptedSharedPreferences
 - Yandex MapKit / Yandex Maps
+- Firebase Cloud Messaging / Remote Config / Firestore / Crashlytics
+- WorkManager
 
 ## Лабораторная работа 6
 
@@ -203,21 +207,36 @@ quality/architecture-test
 ## Сборка
 
 ```bash
-./gradlew :app:assembleDebug
+./gradlew :app:assembleDemoDebug
+./gradlew :app:assembleProdRelease
 ./gradlew :feature:auth:impl:testDebugUnitTest
 ./gradlew :quality:architecture-test:test
 ```
 
-## Как подготовить ветки
+Debug APK для демонстрации находится в `app/build/outputs/apk/demo/debug/app-demo-debug.apk`.
 
-Если репозиторий ещё не инициализирован:
+## Критерии семестровой работы
 
-```bash
-git init
-git checkout -b combined
-git checkout -b layer-based
-git checkout -b feature-based
-git checkout combined
-```
+Без AI-бонуса проект закрывает максимум 18/20: обязательные 15 баллов, Firebase-бонус 2 балла и 1 балл за внешние сервисы/сбор crash-аналитики.
 
-Дальше в каждой ветке можно разнести модули по соответствующей архитектуре, а `quality/architecture-test` использовать как регрессионный набор правил.
+| Критерий | Где реализовано |
+| --- | --- |
+| Clean Architecture, MVVM, многомодульность | `domain/*`, `data/*`, `feature/*/api`, `feature/*/impl`, `core:navigation`, `app/src/main/java/com/example/rooming/di` |
+| Фоновая работа | `app/src/main/java/com/example/rooming/sync/RoomingSyncWorker.kt` периодически синхронизирует FCM-токен и профиль с Firestore; запуск в `RoomingApplication.scheduleBackgroundSync()` |
+| Service / BroadcastReceiver / ContentProvider | `app/src/main/java/com/example/rooming/firebase/PushMessagingService.kt` принимает FCM push-уведомления |
+| Compose-анимации | `feature/rooms/impl/.../RoomsScreen.kt`: `animateContentSize`, `AnimatedVisibility`, `Crossfade` |
+| XML/View и Compose | `feature/about/impl/.../AboutScreen.kt`: `AndroidView` встраивает нативный `MapView` Yandex MapKit в Compose-экран |
+| Debug/release и product flavors | `app/build.gradle.kts`: `debug`, `release`, flavors `demo` и `prod`; в `demo` включены лабораторные crash tools, в `prod` они скрыты |
+| Firebase-бонус | `FirebaseRemoteConfigService`, `FirebaseUserProfileService`, `PushMessagingService`, `google-services.json` |
+| Внешний сервис / crash analytics | Yandex ID, VK ID, Yandex MapKit, AppMetrica, Firebase Crashlytics |
+| Качество кода | Hilt DI, Version Catalog, Konsist-правила в `quality/architecture-test`, отдельные интерфейсы для SDK |
+
+Для демонстрации критериев лучше запускать `demoDebug`: на экране «О нас» будет виден вариант сборки `variant=demo`, блок Remote Config, данные профиля из Firestore и кнопка тестового Crashlytics/AppMetrica crash. В `prod` flavor этот тестовый блок скрыт, что показывает реальное отличие product flavors.
+
+## Что приложить в отчет
+
+- главный экран со списком аудиторий и экран деталей после бронирования, где кнопка меняется на «Забронировано»
+- экран «О нас» в `demoDebug`: `variant=demo`, Remote Config, профиль из Firestore, карта через Yandex MapKit
+- Firebase Console: Remote Config parameter, документ пользователя в Firestore, отправленное FCM-уведомление и Crashlytics issue после тестового crash
+- AppMetrica: событие входа/бронирования или crash report
+- скрин/лог сборки `./gradlew :app:assembleDemoDebug`

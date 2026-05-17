@@ -8,6 +8,7 @@ enum class AuthProvider(val analyticsName: String, val displayName: String) {
 data class AuthSession(
     val token: String,
     val userName: String,
+    val email: String = "",
     val provider: AuthProvider,
 )
 

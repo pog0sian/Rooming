@@ -24,6 +24,7 @@
     <string name="available_slots_subtitle">Бронирование выполняется прямо с экрана деталей.</string>
     <string name="no_slots_left">На сегодня свободных слотов больше нет.</string>
     <string name="book_action">Забронировать</string>
+    <string name="booked_action">Забронировано</string>
     <string name="free_today_label">Свободно сегодня: %1$d</string>
     <string name="details_action">Подробнее</string>
     <string name="booking_success_message">Бронирование оформлено на %1$s</string>
